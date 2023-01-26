@@ -2,6 +2,7 @@ package com.group.libraryapp.service.book
 
 import com.group.libraryapp.domain.book.Book
 import com.group.libraryapp.domain.book.BookRepository
+import com.group.libraryapp.domain.book.BookType
 import com.group.libraryapp.domain.user.User
 import com.group.libraryapp.domain.user.UserRepository
 import com.group.libraryapp.domain.user.loanhistory.UserLoanHistory
@@ -35,7 +36,7 @@ class BookServiceTest @Autowired constructor(
     @DisplayName("책 등록이 정상 동작")
     fun saveBookTest() {
 
-        val bookRequest = BookRequest("kotlin")
+        val bookRequest = BookRequest("kotlin", BookType.COMPUTER)
 
         bookService.saveBook(bookRequest)
 
@@ -48,7 +49,7 @@ class BookServiceTest @Autowired constructor(
     @Test
     @DisplayName("책 대출 정상 동작")
     fun loanBookTest() {
-        bookRepository.save(Book("kotlin"))
+        bookRepository.save(Book.fixture("kotlin"))
         val savedUser = userRepository.save(User("test", null))
 
         val bookLoanRequest = BookLoanRequest("test", "kotlin")
@@ -65,7 +66,7 @@ class BookServiceTest @Autowired constructor(
     @Test
     @DisplayName("책 대출 실패 - 이미 대출 된 경우")
     fun loanBookFailTest() {
-        bookRepository.save(Book("kotlin"))
+        bookRepository.save(Book.fixture("kotlin"))
         val savedUser = userRepository.save(User("test", null))
         userLoanHistoryRepository.save(UserLoanHistory(savedUser, "kotlin", false))
         val bookLoanRequest = BookLoanRequest("test", "kotlin")
